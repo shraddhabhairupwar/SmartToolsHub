@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Semester GPA Calculator - SmartToolsHub</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+}
+
+header{
+background:#2563eb;
+color:white;
+padding:18px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+header h1{
+font-size:28px;
+}
+
+header a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+margin-left:20px;
+}
+
+.container{
+max-width:700px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.container h2{
+text-align:center;
+margin-bottom:10px;
+color:#2563eb;
+}
+
+.container p{
+text-align:center;
+color:#555;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:18px;
+margin-bottom:8px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:14px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:25px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.result{
+margin-top:25px;
+padding:20px;
+background:#e8f5e9;
+border-radius:8px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+display:none;
+}
+
+.error{
+background:#ffebee;
+color:red;
+}
+
+.info{
+margin-top:35px;
+background:#f8f9fa;
+padding:20px;
+border-radius:10px;
+line-height:1.8;
+}
+
+footer{
+margin-top:50px;
+background:#111827;
+color:white;
+text-align:center;
+padding:25px;
+}
+
+.buttons{
+display:flex;
+gap:15px;
+margin-top:25px;
+}
+
+.buttons button{
+flex:1;
+}
+
+
+@media(max-width:768px){
+
+header{
+flex-direction:column;
+}
+
+header nav{
+margin-top:15px;
+}
+
+header a{
+display:inline-block;
+margin:8px;
+}
+
+.container{
+margin:25px 15px;
+padding:20px;
+}
+
+}
+
+</style>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<header>
+
+<h1>SmartToolsHub</h1>
+
+<nav>
+
+<a href="../index.html">Home</a>
+
+</nav>
+
+</header>
+
+
+<div class="container">
+
+
+<h2>Semester GPA Calculator</h2>
+
+
+<p>Calculate your semester GPA using subject grade points and credits.</p>
+
+
+<label>Number of Subjects</label>
+
+<input
+type="number"
+id="subjects"
+placeholder="Example : 6"
+min="1"
+max="20"
+autofocus>
+
+
+<div id="subjectInputs"></div>
+
+
+<div class="buttons">
+
+
+<button id="generateBtn" onclick="generateSubjectFields()">
+
+Generate
+
+</button>
+
+
+<button id="calculateBtn" onclick="calculateCGPA()" style="display:none;">
+
+Calculate
+
+</button>
+
+
+<button onclick="resetCalculator()">
+
+Reset
+
+</button>
+
+
+<button onclick="copyResult()">
+
+Copy Result
+
+</button>
+
+
+</div>
+
+
+<div id="result" class="result"></div>
+
+
+
+<div class="info">
+
+
+<h3>Formula</h3>
+
+
+<p>
+
+Semester GPA = Σ(Grade Point × Credit) ÷ Σ(Credit)
+
+<br><br>
+
+Enter each subject grade point and credit to calculate semester GPA.
+
+</p>
+
+
+<br>
+
+
+<h3>Example</h3>
+
+
+<p>
+
+Subject 1: Grade Point = 9, Credit = 4
+
+<br><br>
+
+Subject 2: Grade Point = 8, Credit = 3
+
+<br><br>
+
+Subject 3: Grade Point = 10, Credit = 3
+
+<br><br>
+
+GPA = (9×4 + 8×3 + 10×3) ÷ (4+3+3)
+
+<br><br>
+
+Semester GPA = 9.00
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+<p>
+
+© 2026 SmartToolsHub
+
+</p>
+
+</footer>
+
+
+<script>
+
+    function generateSubjectFields(){
+
+let subjects=document.getElementById("subjects").value;
+
+let container=document.getElementById("subjectInputs");
+
+
+container.innerHTML="";
+
+
+if(subjects=="" || subjects<=0 || subjects>20){
+
+alert("Please enter subjects between 1 and 20.");
+
+return;
+
+}
+
+
+document.getElementById("generateBtn").style.display="none";
+
+document.getElementById("calculateBtn").style.display="block";
+
+
+
+for(let i=1;i<=subjects;i++){
+
+
+container.innerHTML +=
+
+`
+
+<label>Subject ${i} Grade Point</label>
+
+<input
+type="number"
+id="grade${i}"
+placeholder="Example : 9"
+step="0.01"
+min="0"
+max="10">
+
+
+<label>Subject ${i} Credit</label>
+
+<input
+type="number"
+id="credit${i}"
+placeholder="Example : 4"
+step="0.01"
+min="0">
+
+`;
+
+}
+
+
+}
+
+
+
+function calculateCGPA(){
+
+let subjects=document.getElementById("subjects").value;
+
+let result=document.getElementById("result");
+
+
+if(subjects=="" || subjects<=0){
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Please generate subject fields first.";
+
+return;
+
+}
+
+
+let totalPoints=0;
+
+let totalCredits=0;
+
+
+
+for(let i=1;i<=subjects;i++){
+
+
+let grade=document.getElementById("grade"+i).value;
+
+let credit=document.getElementById("credit"+i).value;
+
+
+
+if(grade=="" || credit==""){
+
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Please enter all subject grade points and credits.";
+
+return;
+
+
+}
+
+
+
+grade=Number(grade);
+
+credit=Number(credit);
+
+
+
+if(grade<0 || grade>10 || credit<=0){
+
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Enter valid Grade Point (0-10) and Credit.";
+
+return;
+
+
+}
+
+
+
+totalPoints += grade * credit;
+
+totalCredits += credit;
+
+
+}
+
+
+
+if(totalCredits==0){
+
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Total credits cannot be zero.";
+
+return;
+
+
+}
+
+
+
+let cgpa = totalPoints / totalCredits;
+
+
+
+let formatter=new Intl.NumberFormat("en-IN",{
+
+minimumFractionDigits:2,
+
+maximumFractionDigits:2
+
+});
+
+
+
+result.style.display="block";
+
+result.className="result";
+
+
+
+result.innerHTML=
+
+"🎓 Semester GPA<br><br>"
+
++"<span style='font-size:32px;color:#2563eb;'>"
+
++formatter.format(cgpa)
+
++"</span>";
+
+
+
+}
+
+
+
+
+function resetCalculator(){
+
+
+document.getElementById("subjects").value="";
+
+document.getElementById("subjectInputs").innerHTML="";
+
+document.getElementById("result").innerHTML="";
+
+document.getElementById("result").style.display="none";
+
+
+document.getElementById("subjects").focus();
+
+
+document.getElementById("generateBtn").style.display="block";
+
+document.getElementById("calculateBtn").style.display="none";
+
+
+}
+
+
+
+
+
+function copyResult(){
+
+
+let text=document.getElementById("result").innerText;
+
+
+
+if(text.trim()==""){
+
+
+alert("Please calculate first.");
+
+return;
+
+
+}
+
+
+
+navigator.clipboard.writeText(text);
+
+
+alert("Result Copied!");
+
+
+}
+
+
+
+
+
+document.addEventListener("keydown",function(event){
+
+
+if(event.key==="Enter"){
+
+
+if(document.getElementById("calculateBtn").style.display=="block"){
+
+
+calculateCGPA();
+
+
+}
+
+else{
+
+
+generateSubjectFields();
+
+
+}
+
+
+}
+
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>

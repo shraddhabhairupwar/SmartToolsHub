@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Salary Calculator - SmartToolsHub</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+}
+
+header{
+background:#2563eb;
+color:white;
+padding:18px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+header h1{
+font-size:28px;
+}
+
+header a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+margin-left:20px;
+}
+
+.container{
+max-width:700px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.container h2{
+text-align:center;
+margin-bottom:10px;
+color:#2563eb;
+}
+
+.container p{
+text-align:center;
+color:#555;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:18px;
+margin-bottom:8px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:14px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:25px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.result{
+margin-top:25px;
+padding:20px;
+background:#e8f5e9;
+border-radius:8px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+display:none;
+}
+
+.error{
+background:#ffebee;
+color:red;
+}
+
+.info{
+margin-top:35px;
+background:#f8f9fa;
+padding:20px;
+border-radius:10px;
+line-height:1.8;
+}
+
+footer{
+margin-top:50px;
+background:#111827;
+color:white;
+text-align:center;
+padding:25px;
+}
+
+.buttons{
+display:flex;
+gap:15px;
+margin-top:25px;
+}
+
+.buttons button{
+flex:1;
+}
+
+@media(max-width:768px){
+
+header{
+flex-direction:column;
+}
+
+header nav{
+margin-top:15px;
+}
+
+header a{
+display:inline-block;
+margin:8px;
+}
+
+.container{
+margin:25px 15px;
+padding:20px;
+}
+
+}
+
+</style>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<header>
+
+<h1>SmartToolsHub</h1>
+
+<nav>
+
+<a href="../index.html">Home</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<h2>Salary Calculator (CTC to In-Hand)</h2>
+
+<p>Calculate your monthly and annual in-hand salary instantly.</p>
+
+<label>Annual CTC (₹)</label>
+
+<input
+type="number"
+id="ctc"
+placeholder="Example : 600000"
+step="0.01"
+min="0.01"
+autofocus>
+
+<label>PF Deduction (%)</label>
+
+<input
+type="number"
+id="pf"
+placeholder="Example : 12"
+value="12"
+step="0.01"
+min="0">
+
+<label>Professional Tax (₹ / Month)</label>
+
+<input
+type="number"
+id="pt"
+placeholder="Example : 200"
+value="200"
+step="0.01"
+min="0">
+
+<label>Annual Income Tax (₹)</label>
+
+<input
+type="number"
+id="tax"
+placeholder="Example : 0"
+value="0"
+step="0.01"
+min="0">
+
+<div class="buttons">
+
+<button onclick="calculateSalary()">
+Calculate
+</button>
+
+<button onclick="resetCalculator()">
+Reset
+</button>
+
+<button onclick="copyResult()">
+Copy Result
+</button>
+
+</div>
+
+<div id="result" class="result"></div>
+
+<div class="info">
+
+<h3>Formula</h3>
+
+<p>
+
+Monthly Gross Salary = Annual CTC ÷ 12
+
+<br><br>
+
+Monthly PF = (Annual CTC × PF%) ÷ 100 ÷ 12
+
+<br><br>
+
+Monthly Income Tax = Annual Income Tax ÷ 12
+
+<br><br>
+
+Monthly In-Hand Salary =
+Monthly Gross Salary − Monthly PF − Professional Tax − Monthly Income Tax
+
+</p>
+
+<br>
+
+<h3>Example</h3>
+
+<p>
+
+Annual CTC = ₹600000
+
+<br><br>
+
+PF = 12%
+
+<br><br>
+
+Professional Tax = ₹200 / Month
+
+<br><br>
+
+Income Tax = ₹0
+
+<br><br>
+
+Monthly In-Hand Salary ≈ ₹43,800
+
+</p>
+
+</div>
+
+</div>
+
+<footer>
+
+<p>
+
+© 2026 SmartToolsHub
+
+</p>
+
+</footer>
+
+<script>
+
+function calculateSalary(){
+
+let ctc=document.getElementById("ctc").value;
+let pf=document.getElementById("pf").value;
+let pt=document.getElementById("pt").value;
+let tax=document.getElementById("tax").value;
+
+let result=document.getElementById("result");
+
+if(ctc=="" || pf=="" || pt=="" || tax==""){
+
+result.style.display="block";
+result.className="result error";
+result.innerHTML="❌ Please enter all values.";
+
+return;
+
+}
+
+ctc=Number(ctc);
+pf=Number(pf);
+pt=Number(pt);
+tax=Number(tax);
+
+if(ctc<=0 || pf<0 || pt<0 || tax<0){
+
+result.style.display="block";
+result.className="result error";
+result.innerHTML="❌ Please enter valid values.";
+
+return;
+
+}
+
+let monthlyGross=ctc/12;
+
+let monthlyPF=(ctc*pf/100)/12;
+
+let monthlyTax=tax/12;
+
+let monthlyInHand=
+monthlyGross-monthlyPF-pt-monthlyTax;
+
+let annualInHand=
+monthlyInHand*12;
+
+let formatter=new Intl.NumberFormat("en-IN",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
+result.style.display="block";
+result.className="result";
+
+result.innerHTML=
+
+"💼 Monthly Gross Salary : ₹"
++formatter.format(monthlyGross)
+
++"<br><br>"
+
++"🏦 Monthly PF : ₹"
++formatter.format(monthlyPF)
+
++"<br><br>"
+
++"🧾 Professional Tax : ₹"
++formatter.format(pt)
+
++"<br><br>"
+
++"💸 Monthly Income Tax : ₹"
++formatter.format(monthlyTax)
+
++"<br><br>"
+
++"💰 Monthly In-Hand Salary<br><span style='font-size:32px;color:#2563eb;'>₹"
++formatter.format(monthlyInHand)
++"</span>"
+
++"<br><br>"
+
++"📅 Annual In-Hand Salary : ₹"
++formatter.format(annualInHand);
+
+}
+function resetCalculator(){
+
+document.getElementById("ctc").value="";
+document.getElementById("pf").value="";
+document.getElementById("pt").value="";
+document.getElementById("tax").value="";
+
+document.getElementById("result").innerHTML="";
+document.getElementById("result").style.display="none";
+
+document.getElementById("ctc").focus();
+
+}
+
+function copyResult(){
+
+let text=document.getElementById("result").innerText;
+
+if(text.trim()==""){
+
+alert("Please calculate first.");
+return;
+
+}
+
+navigator.clipboard.writeText(text);
+
+alert("Result Copied!");
+
+}
+
+document.addEventListener("keydown",function(event){
+
+if(event.key==="Enter"){
+
+calculateSalary();
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>

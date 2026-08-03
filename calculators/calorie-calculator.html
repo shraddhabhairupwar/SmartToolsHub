@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calorie Calculator - SmartToolsHub</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f7fb;
+}
+
+header{
+background:#2563eb;
+color:white;
+padding:18px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+header h1{
+font-size:28px;
+}
+
+header a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+margin-left:20px;
+}
+
+.container{
+max-width:700px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.container h2{
+text-align:center;
+margin-bottom:10px;
+color:#2563eb;
+}
+
+.container p{
+text-align:center;
+color:#555;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:18px;
+margin-bottom:8px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:14px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+}
+
+select{
+width:100%;
+padding:14px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+background:white;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:25px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.result{
+margin-top:25px;
+padding:20px;
+background:#e8f5e9;
+border-radius:8px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+display:none;
+}
+
+.error{
+background:#ffebee;
+color:red;
+}
+
+.info{
+margin-top:35px;
+background:#f8f9fa;
+padding:20px;
+border-radius:10px;
+line-height:1.8;
+}
+
+footer{
+margin-top:50px;
+background:#111827;
+color:white;
+text-align:center;
+padding:25px;
+}
+
+.buttons{
+display:flex;
+gap:15px;
+margin-top:25px;
+}
+
+.buttons button{
+flex:1;
+}
+
+@media(max-width:768px){
+
+header{
+flex-direction:column;
+}
+
+header nav{
+margin-top:15px;
+}
+
+header a{
+display:inline-block;
+margin:8px;
+}
+
+.container{
+margin:25px 15px;
+padding:20px;
+}
+
+}
+
+</style>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<header>
+
+<h1>SmartToolsHub</h1>
+
+<nav>
+
+<a href="../index.html">Home</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<h2>Calorie Calculator</h2>
+
+<p>Calculate your estimated daily calorie requirement instantly.</p>
+
+<label>Gender</label>
+
+<select id="gender">
+
+<option value="male">Male</option>
+
+<option value="female">Female</option>
+
+</select>
+
+<label>Age (Years)</label>
+
+<input
+type="number"
+id="age"
+placeholder="Example : 25"
+step="1"
+min="1"
+max="120"
+autofocus>
+
+<label>Weight (kg)</label>
+
+<input
+type="number"
+id="weight"
+placeholder="Example : 60"
+step="0.1"
+min="1">
+
+<label>Height (cm)</label>
+
+<input
+type="number"
+id="height"
+placeholder="Example : 170"
+step="0.1"
+min="1">
+
+<label>Activity Level</label>
+
+<select id="activity">
+
+<option value="1.2">Sedentary (Little or No Exercise)</option>
+
+<option value="1.375">Lightly Active (1–3 Days/Week)</option>
+
+<option value="1.55">Moderately Active (3–5 Days/Week)</option>
+
+<option value="1.725">Very Active (6–7 Days/Week)</option>
+
+<option value="1.9">Extra Active (Physical Job or Athlete)</option>
+
+</select>
+
+<div class="buttons">
+
+<button onclick="calculateCalories()">
+Calculate
+</button>
+
+<button onclick="resetCalculator()">
+Reset
+</button>
+
+<button onclick="copyResult()">
+Copy Result
+</button>
+
+</div>
+
+<div id="result" class="result"></div>
+
+<div class="info">
+
+<h3>Formula</h3>
+
+<p>
+
+Male BMR = (10 × Weight) + (6.25 × Height) − (5 × Age) + 5
+
+<br><br>
+
+Female BMR = (10 × Weight) + (6.25 × Height) − (5 × Age) − 161
+
+<br><br>
+
+Daily Calories = BMR × Activity Factor
+
+</p>
+
+<br>
+
+<h3>Example</h3>
+
+<p>
+
+Gender = Female
+
+<br><br>
+
+Age = 25 Years
+
+<br><br>
+
+Weight = 60 kg
+
+<br><br>
+
+Height = 165 cm
+
+<br><br>
+
+Activity = Moderately Active
+
+<br><br>
+
+Daily Calories ≈ 2,085 kcal
+
+</p>
+
+</div>
+
+</div>
+
+<footer>
+
+<p>
+
+© 2026 SmartToolsHub
+
+</p>
+
+</footer>
+
+<script>
+
+    function calculateCalories(){
+
+let gender=document.getElementById("gender").value;
+let age=document.getElementById("age").value;
+let weight=document.getElementById("weight").value;
+let height=document.getElementById("height").value;
+let activity=Number(document.getElementById("activity").value);
+
+let result=document.getElementById("result");
+
+if(age=="" || weight=="" || height==""){
+
+result.style.display="block";
+result.className="result error";
+result.innerHTML="❌ Please enter all values.";
+
+return;
+
+}
+
+age=Number(age);
+weight=Number(weight);
+height=Number(height);
+
+if(age<=0 || weight<=0 || height<=0){
+
+result.style.display="block";
+result.className="result error";
+result.innerHTML="❌ All values must be greater than 0.";
+
+return;
+
+}
+
+let bmr;
+
+if(gender==="male"){
+
+bmr=(10*weight)+(6.25*height)-(5*age)+5;
+
+}else{
+
+bmr=(10*weight)+(6.25*height)-(5*age)-161;
+
+}
+
+let calories=bmr*activity;
+
+let formatter=new Intl.NumberFormat("en-IN",{
+minimumFractionDigits:2,
+maximumFractionDigits:2
+});
+
+let activityText=
+document.getElementById("activity").options[
+document.getElementById("activity").selectedIndex
+].text;
+
+result.style.display="block";
+result.className="result";
+
+result.innerHTML=
+
+"🔥 Daily Calories Required<br><br><span style='font-size:32px;color:#2563eb;'>"
++formatter.format(calories)
++" kcal/day</span>"
++"<br><br>"
++"👤 Gender : "
++(gender==="male" ? "Male" : "Female")
+
++"<br><br>"
+
++"⚡ BMR : "
++formatter.format(bmr)
++" kcal/day"
+
++"<br><br>"
+
++"🏃 Activity : "
++activityText;
+
+}
+
+function resetCalculator(){
+
+document.getElementById("gender").selectedIndex=0;
+document.getElementById("age").value="";
+document.getElementById("weight").value="";
+document.getElementById("height").value="";
+document.getElementById("activity").selectedIndex=0;
+
+document.getElementById("result").innerHTML="";
+document.getElementById("result").style.display="none";
+
+document.getElementById("age").focus();
+
+}
+
+function copyResult(){
+
+let text=document.getElementById("result").innerText;
+
+if(text.trim()==""){
+
+alert("Please calculate first.");
+return;
+
+}
+
+navigator.clipboard.writeText(text);
+
+alert("Result Copied!");
+
+}
+
+document.addEventListener("keydown", function(event){
+
+if(event.key==="Enter"){
+
+calculateCalories();
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>

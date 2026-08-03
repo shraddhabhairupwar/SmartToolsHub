@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Attendance Percentage Calculator - SmartToolsHub</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8f3;
+}
+
+header{
+background:linear-gradient(135deg,#002c3e,#78bcc4);
+color:white;
+padding:18px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+header h1{
+font-size:28px;
+}
+
+header a{
+color:white;
+text-decoration:none;
+font-weight:bold;
+}
+
+.container{
+max-width:700px;
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+h2{
+text-align:center;
+color:#002c3e;
+margin-bottom:10px;
+}
+
+.container p{
+text-align:center;
+color:#555;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:18px;
+margin-bottom:8px;
+font-weight:bold;
+}
+
+input{
+width:100%;
+padding:14px;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:25px;
+border:none;
+border-radius:8px;
+background:linear-gradient(135deg,#f7444e,#78bcc4);
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:linear-gradient(135deg,#d93643,#78bcc4);
+}
+
+.buttons{
+display:flex;
+gap:15px;
+margin-top:25px;
+}
+
+.buttons button{
+flex:1;
+}
+
+.result{
+margin-top:25px;
+padding:20px;
+background:linear-gradient(135deg,#78bcc4,#f7f8f3);
+border-radius:8px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+display:none;
+}
+
+.error{
+background:#ffebee;
+color:red;
+}
+
+.info{
+margin-top:35px;
+background:#ffffff;
+border: 1px solid rgba(120,188,196,.3);
+padding:20px;
+border-radius:10px;
+line-height:1.8;
+}
+
+footer{
+margin-top:50px;
+background:#111827;
+color:white;
+text-align:center;
+padding:25px;
+}
+
+@media(max-width:768px){
+
+header{
+flex-direction:column;
+}
+
+header nav{
+margin-top:15px;
+}
+
+.container{
+margin:25px 15px;
+padding:20px;
+}
+
+.buttons{
+flex-direction:column;
+}
+
+}
+
+</style>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<header>
+
+<h1>SmartToolsHub</h1>
+
+<nav>
+
+<a href="../index.html">Home</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<h2>Attendance Percentage Calculator</h2>
+
+<p>Calculate your attendance percentage instantly.</p>
+<label>Total Classes</label>
+
+<input
+type="number"
+id="totalClasses"
+placeholder="Example : 120"
+min="1"
+step="1"
+max="100000"
+autofocus>
+
+
+<label>Classes Attended</label>
+
+<input
+type="number"
+id="attendedClasses"
+placeholder="Example : 96"
+min="0"
+step="1"
+max="100000">
+
+
+<div class="buttons">
+
+<button onclick="calculateAttendance()">
+
+Calculate
+
+</button>
+
+
+<button onclick="resetCalculator()">
+
+Reset
+
+</button>
+
+
+<button onclick="copyResult()">
+
+Copy Result
+
+</button>
+
+</div>
+
+
+<div id="result" class="result"></div>
+
+
+<div class="info">
+
+<h3>Formula</h3>
+
+<p>
+
+Attendance Percentage = (Classes Attended ÷ Total Classes) × 100
+
+<br><br>
+
+Enter total classes and attended classes to calculate attendance percentage.
+
+</p>
+
+<br>
+
+<h3>Example</h3>
+
+<p>
+
+Total Classes = 120
+
+<br><br>
+
+Classes Attended = 96
+
+<br><br>
+
+Attendance Percentage = (96 ÷ 120) × 100
+
+<br><br>
+
+Attendance Percentage = 80%
+
+</p>
+
+</div>
+
+</div>
+
+<footer>
+
+<p>
+
+© 2026 SmartToolsHub
+
+</p>
+
+</footer>
+
+<script>
+
+function calculateAttendance(){
+
+let total=document.getElementById("totalClasses").value;
+
+let attended=document.getElementById("attendedClasses").value;
+
+let result=document.getElementById("result");
+
+result.innerHTML="";
+
+
+if(total.trim()=="" || attended.trim()==""){
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Please enter both values.";
+
+return;
+
+}
+
+
+total=Number(total);
+
+attended=Number(attended);
+
+
+if(!Number.isFinite(total) || !Number.isFinite(attended)){
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Please enter valid numbers.";
+
+return;
+
+}
+
+
+if(total<=0){
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Total classes must be greater than zero.";
+
+return;
+
+}
+
+
+if(total>100000 || attended>100000){
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Classes should be between 0 and 100000.";
+
+return;
+
+}
+
+
+if(attended<0 || attended>total){
+
+result.style.display="block";
+
+result.className="result error";
+
+result.innerHTML="❌ Enter valid attended classes.";
+
+return;
+
+}
+
+
+let percentage=(attended/total)*100;
+
+
+let formatter=new Intl.NumberFormat("en-IN",{
+
+minimumFractionDigits:2,
+
+maximumFractionDigits:2
+
+});
+
+
+result.style.display="block";
+
+result.className="result";
+
+
+result.innerHTML=
+
+"📅 Attendance Percentage<br><br>"
+
++"<span style='font-size:32px;color:#2563eb;'>"
+
++formatter.format(percentage)
+
++"%</span>";
+
+}
+
+
+function resetCalculator(){
+
+document.getElementById("totalClasses").value="";
+
+document.getElementById("attendedClasses").value="";
+
+document.getElementById("result").innerHTML="";
+
+document.getElementById("result").style.display="none";
+
+document.getElementById("totalClasses").focus();
+
+}
+
+
+function copyResult(){
+
+let text=document.getElementById("result").innerText;
+
+if(text.trim()==""){
+
+alert("Please calculate first.");
+
+return;
+
+}
+
+navigator.clipboard.writeText(text)
+.then(()=>{
+
+alert("Result Copied!");
+
+})
+.catch(()=>{
+
+alert("Copy failed. Please copy manually.");
+
+});
+
+}
+
+
+document.addEventListener("keydown",function(event){
+
+if(event.key==="Enter"){
+
+calculateAttendance();
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>
